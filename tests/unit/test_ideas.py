@@ -15,7 +15,7 @@ def test_ideas_ok() -> None:
         "title",
         "why_it_matches",
         "steps",
-        "estimated_time_hours",
+        "estimated_time",
         "difficulty",
         "starter_resources",
     } <= set(first)

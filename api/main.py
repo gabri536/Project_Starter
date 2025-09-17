@@ -19,8 +19,8 @@ async def ideas(body: IdeaRequest) -> IdeaResponse:
     base = {
         "why_it_matches": "Matches your interests and is beginner-friendly.",
         "steps": ["Set up tools", "Follow a tutorial", "Build a small example"],
-        "estimated_time_hours": 2.0,
-        "difficulty": "starter",
+        "estimated_time": 2.0,
+        "difficulty": "easy",
         "starter_resources": [],
     }
     ideas = [Idea(title=f"{body.hobby.title()} idea {i+1}", **base) for i in range(5)]
