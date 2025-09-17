@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import Idea, IdeaRequest, IdeaResponse
+from .models import Idea, IdeaRequest, IdeaResponse
 
 app = FastAPI(title="Project Starter API")
 

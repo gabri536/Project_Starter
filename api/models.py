@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, HttpUrl
 Difficulty = Literal["easy", "medium", "hard"]
 
 
-class Ressource(BaseModel):
+class Resource(BaseModel):
     name: str
     url: HttpUrl
 
@@ -15,7 +15,7 @@ class Idea(BaseModel):
     steps: list[str] = Field(min_length=1, max_length=10)
     estimated_time: float = Field(ge=0.5, le=20)
     difficulty: Difficulty
-    starter_resources: list[Ressource] = []
+    starter_resources: list[Resource] = []
 
 
 class IdeaRequest(BaseModel):
