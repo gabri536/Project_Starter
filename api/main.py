@@ -1,7 +1,14 @@
-from fastapi import FastAPI
-from .models import Idea, IdeaRequest, IdeaResponse
+from fastapi import FastAPI, Depends
+from .models import IdeaRequest, IdeaResponse
+from core.llm import LLMClient
+from core.parser import parse_llm_json
+import json
 
 app = FastAPI(title="Project Starter API")
+
+
+def get_llm() -> LLMClient:
+    return LLMClient()
 
 
 @app.get("/")
@@ -15,13 +22,13 @@ async def healthz() -> dict[str, bool]:
 
 
 @app.post("/ideas", response_model=IdeaResponse)
-async def ideas(body: IdeaRequest) -> IdeaResponse:
-    base = {
-        "why_it_matches": "Matches your interests and is beginner-friendly.",
-        "steps": ["Set up tools", "Follow a tutorial", "Build a small example"],
-        "estimated_time": 2.0,
-        "difficulty": "easy",
-        "starter_resources": [],
-    }
-    ideas = [Idea(title=f"{body.hobby.title()} idea {i+1}", **base) for i in range(5)]
-    return IdeaResponse(ideas=ideas)
+async def ideas(body: IdeaRequest, llm: LLMClient = Depends(get_llm)) -> IdeaResponse:
+    schema = IdeaResponse.model_json_schema()
+    user = (
+        f"HOBBY: {body.hobby}\n"
+        f"INTERESTS: {', '.join(body.interests)}\n"
+        f"Return exactly 5 ideas.\n"
+        f"JSON schema:\n{json.dumps(schema)}"
+    )
+    content = await llm.json_chat(user)
+    return parse_llm_json(content)
